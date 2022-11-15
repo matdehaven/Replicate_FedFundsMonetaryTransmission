@@ -67,7 +67,7 @@ irf_vals[shock_var != "ff" & response_var == "ff"] |>
   geom_line() +
   scale_y_continuous(limits = c(-0.31, 0.5), expand = c(0,0), breaks = c(-0.3,-0.2,-0.1,0,0.1,0.2,0.3,0.4,0.5)) +
   labs(
-    title = "Response of Funds Rate to Unemployment and Inflation Shocks",
+    title = "Response of Funds Rate to \nU and I Shocks",
     x = "Horizon (Months)",
     y = "Percentage Points",
     caption = paste0(
@@ -75,7 +75,7 @@ irf_vals[shock_var != "ff" & response_var == "ff"] |>
     ) 
   ) +
   theme_bw() +
-  theme(legend.position = c(0.8,0.5), legend.background = element_blank(), legend.title = element_blank())
+  theme(legend.position = c(0.8,0.5), legend.key = element_blank(), legend.background = element_blank(), legend.title = element_blank())
 
 ggsave("./output/charts/BernankeBlinderVARchart.png", irf_chart, height = 4, width = 3, units = "in")
 

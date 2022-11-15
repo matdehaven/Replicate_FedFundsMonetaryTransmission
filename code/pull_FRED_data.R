@@ -26,6 +26,10 @@ data <- data[,..order]
 names(data) <- c("date", names(series))
 data <- data |> melt(id = "date", variable.name = "series_id")
 
+## Seasonally Adjust
+## TODO
+
+
 saveRDS(data, "./data/uiff_data.RDS")
 
 

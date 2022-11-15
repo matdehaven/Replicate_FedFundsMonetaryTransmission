@@ -1,3 +1,6 @@
+## Mac Folder
+.DS_Store
+
 # Data folder
 /data
 data/

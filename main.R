@@ -7,3 +7,8 @@
 ##
 
 ## Step 1:  Gather data
+source("./code/pull_FRED_data.R")
+
+source("./code/Recrate_BernankeBlinderVAR.R")
+
+source("./code/Update_BernankeBlinderVAR.R")

@@ -14,6 +14,7 @@ require(ggplot2)
 
 ## Read in data
 data <- readRDS("./data/uiff_data.RDS")
+data <- data[,.(date, series_id, value)]
 data[, date := ymd(date)]
 
 ## Convert to wide

@@ -25,16 +25,12 @@ data <- data[date >= ymd(c("1959-07-01"))]
 ## Transform
 data[, i := log(i)]
 
-## Ordering (for Choleskey Decomposition)
-order <- c("date", "ff", "u", "i")
-data <- data[,..order]
-
 ## Test BIC
-vars::VARselect(data[,-"date"])
+vars::VARselect(data[,.(ff, u, i)])
 ## The paper uses 6, but the BIC (SC) here says we should use 2
 
 ## Set up VAR
-myvar <- vars::VAR(data[,-"date"], p = 6, type = "none",)
+myvar <- vars::VAR(data[,.(ff, u, i)], p = 6, type = "none",)
 
 ## Choleskey ID
 mysvar <-svars::id.chol(myvar)

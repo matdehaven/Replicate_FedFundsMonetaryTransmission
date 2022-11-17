@@ -10,6 +10,7 @@ require(fredr) ## Package to pull FRED data
 require(ggplot2)
 require(seasonal)
 require(zoo)
+require(readxl)
 
 ## You can request your own key from FRED and replace it here
 apiKey <- readChar("./data/FRED_API_KEY.txt", file.info("./data/FRED_API_KEY.txt")$size)
@@ -26,10 +27,20 @@ data <- data |> dcast(date ~ series_id)
 order <- c("date", series)
 data <- data[,..order]
 names(data) <- c("date", names(series))
+
+## Read in Shadow Rate data
+shadow <- readxl::read_excel("./data/WuXiaShadowRate.xlsx", sheet = 2) |> as.data.table()
+names(shadow) <- c("date", "ffr", "sff", "", "")
+shadow <- shadow[,.(date = as.Date(date), sff)]
+
+## Merge onto other series
+data <- merge(data, shadow, by = "date", all = T)
+data[is.na(sff), sff := ff]
+
+## Melt series
 data <- data |> melt(id = "date", variable.name = "series_id")
 
 ## Seasonally Adjust
-## TODO
 
 seasonally_adjust <- function(x, dates){
   

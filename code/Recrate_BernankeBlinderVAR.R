@@ -21,7 +21,7 @@ data[, date := ymd(date)]
 data <- data |> dcast(date ~ series_id)
 
 ## Transform
-data[, i := log(i)]
+data[, pi := log(pi)]
 
 
 ## Trim to time period
@@ -29,15 +29,15 @@ data <- data[date %between% ymd(c("1959-07-01", "1979-09-30"))]
 
 
 ## Ordering (for Choleskey Decomposition)
-order <- c("date", "sff", "ff", "u", "i")
+order <- c("date", "sff", "ff", "u", "pi")
 data <- data[,..order]
   
 ## Test BIC
-vars::VARselect(data[,.(ff,u,i)])
+vars::VARselect(data[,.(ff,u,pi)])
 ## The paper uses 6, but the BIC (SC) here says we should use 2
 
 ## Set up VAR
-myvar <- vars::VAR(data[,.(ff,u,i)], p = 6, type = "none")
+myvar <- vars::VAR(data[,.(ff,u,pi)], p = 6, type = "none")
 
 ## Choleskey ID
 mysvar <-svars::id.chol(myvar)
@@ -51,8 +51,8 @@ irf_vals[, response_var := str_extract(variable, "(?<= )\\w*$")]
 
 ## Shock sizes
 u_init_shock <- irf_vals[t==0&shock_var=="u"&response_var=="u", value]*100 ## In Basis Points
-i_init_shock <- irf_vals[t==0&shock_var=="i"&response_var=="i", value]
-i_init_shock <- ((1 + i_init_shock)^12-1)*100*100 ## Annualized rate, in Basis Points
+pi_init_shock <- irf_vals[t==0&shock_var=="pi"&response_var=="pi", value]
+pi_init_shock <- ((1 + pi_init_shock)^12-1)*100*100 ## Annualized rate, in Basis Points
 
 ## Chart the IRF
 irf_chart <- 
@@ -70,7 +70,7 @@ irf_vals[shock_var != "ff" & response_var == "ff"] |>
     x = "Horizon (Months)",
     y = "Percentage Points",
     caption = paste0(
-      "Initial Shocks:  ", round(u_init_shock, 0), " bps (u), ", round(i_init_shock, 0), " bps (i)."
+      "Initial Shocks:  ", round(u_init_shock, 0), " bps (u), ", round(pi_init_shock, 0), " bps (pi)."
     ) 
   ) +
   theme_bw() +
